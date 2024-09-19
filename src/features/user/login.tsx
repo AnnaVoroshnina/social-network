@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
-import { Input } from "../components/input"
+import { Input } from "../../components/input"
 import { Link } from "@nextui-org/react"
 import { Button } from "@nextui-org/button"
-import { useLazyCurrentQuery, useLoginMutation } from "../app/services/userApi"
+import { useLazyCurrentQuery, useLoginMutation } from "../../app/services/userApi"
 import { useNavigate } from "react-router-dom"
-import { hasErrorField } from "../utils/has-error-field"
-import { ErrorMessage } from "../components/error-message"
+import { hasErrorField } from "../../utils/has-error-field"
+import { ErrorMessage } from "../../components/error-message"
 
 
 type LoginProps = {
@@ -34,7 +34,7 @@ export const Login = ({ setSelected }: Props) => {
   const onSubmit = async (data: LoginProps) => {
     try {
       await login(data).unwrap()
-      await triggerCurrentQuery()
+      await triggerCurrentQuery().unwrap()
       navigate('/')
     } catch (error) {
       if (hasErrorField(error)) {

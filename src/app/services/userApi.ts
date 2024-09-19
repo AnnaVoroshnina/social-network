@@ -56,5 +56,5 @@ export const {
 } = userApi
 
 export const {
-  endpoints: {login, register, current, getUserByID, updateUser},
+  endpoints: {login, register, current, getUserById, updateUser},
 } = userApi

@@ -1,11 +1,11 @@
-import { Input } from "../components/input"
+import { Input } from "../../components/input"
 import { Link } from "@nextui-org/react"
 import { Button } from "@nextui-org/button"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
-import { useRegisterMutation } from "../app/services/userApi"
-import { hasErrorField } from "../utils/has-error-field"
-import { ErrorMessage } from "../components/error-message"
+import { useRegisterMutation } from "../../app/services/userApi"
+import { hasErrorField } from "../../utils/has-error-field"
+import { ErrorMessage } from "../../components/error-message"
 
 type Props = {
   setSelected: (value: string) => void
@@ -51,7 +51,7 @@ export const Register = ({setSelected}: Props) => {
           size="sm"
           className="cursor-pointer"
           onPress={() => setSelected("login")}
-          href="/login">Войдите</Link>
+          href="/src/features/user/login">Войдите</Link>
       </p>
       <div className="flex gap-2 justify-end">
         <Button fullWidth color="primary" type="submit" isLoading={isLoading}>
