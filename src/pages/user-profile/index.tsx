@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { resetUser, selectCurrent } from "../../features/user/userSlice"
 import { useLazyCurrentQuery, useLazyGetUserByIdQuery, useGetUserByIdQuery } from "../../app/services/userApi"
 import { useFollowUserMutation, useUnfollowUserMutation } from "../../app/services/followApi"
-import { useEffect, } from "react"
+import { useEffect } from "react"
 import { GoBack } from "../../components/go-back"
 import { BASE_URL } from "../../constants"
 import { MdOutlinePersonAddAlt1, MdOutlinePersonAddDisabled } from "react-icons/md"
@@ -27,6 +27,19 @@ export const UserProfile = () => {
   useEffect(() => () => {
     dispatch(resetUser())
   }, [])
+  const handleFollow = async () => {
+    try {
+      if (id) {
+        data.isFollowing
+          ? await unfollowUser(id).unwrap()
+          : await followUser({ followingId: id }).unwrap()
+        await triggerGetUserById(id)
+        await triggerCurrentQuery()
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   if (!data) return null
   return (
@@ -49,24 +62,25 @@ export const UserProfile = () => {
                   color={data.isFollowing ? "default" : "primary"}
                   variant="flat"
                   className="gap-2"
+                  onClick={handleFollow}
                   endContent={
                     data.isFollowing ? (
                       <MdOutlinePersonAddDisabled />
                     ) : (<MdOutlinePersonAddAlt1 />)
                   }
-                >{data.isFollowing ? 'Отписаться' : 'Подписаться'} </Button>)
-                : (<Button endContent={<CiEdit/>}>Редактировать</Button>)
+                >{data.isFollowing ? "Отписаться" : "Подписаться"} </Button>)
+                : (<Button endContent={<CiEdit />}>Редактировать</Button>)
             }
           </div>
         </Card>
         <Card className="flex flex-col space-y-4 p-5 flex-1">
-          <ProfileInfo title='Почта' info={data.email} />
-          <ProfileInfo title='Местоположение' info={data.location} />
-          <ProfileInfo title='Дата рождения' info={formatToClientDate(data.dateOfBirth)} />
-          <ProfileInfo title='Обо мне' info={data.bio} />
+          <ProfileInfo title="Почта" info={data.email} />
+          <ProfileInfo title="Местоположение" info={data.location} />
+          <ProfileInfo title="Дата рождения" info={formatToClientDate(data.dateOfBirth)} />
+          <ProfileInfo title="Обо мне" info={data.bio} />
           <div className="flex gap-2">
-             <CountInfo count={data.followers.length} title='Подписчики'/>
-             <CountInfo count={data.following.length} title='Подписки'/>
+            <CountInfo count={data.followers.length} title="Подписчики" />
+            <CountInfo count={data.following.length} title="Подписки" />
           </div>
         </Card>
       </div>
