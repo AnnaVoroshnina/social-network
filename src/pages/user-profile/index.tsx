@@ -28,6 +28,19 @@ export const UserProfile = () => {
   useEffect(() => () => {
     dispatch(resetUser())
   }, [])
+  const handleFollow = async () => {
+    try {
+      if (id) {
+        data.isFollowing
+          ? await unfollowUser(id).unwrap()
+          : await followUser({ followingId: id }).unwrap()
+        await triggerGetUserById(id)
+        await triggerCurrentQuery()
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const handleClose = async () => {
     try {
@@ -62,6 +75,7 @@ export const UserProfile = () => {
                   color={data.isFollowing ? "default" : "primary"}
                   variant="flat"
                   className="gap-2"
+                  onClick={handleFollow}
                   endContent={
                     data.isFollowing ? (
                       <MdOutlinePersonAddDisabled />
@@ -69,6 +83,7 @@ export const UserProfile = () => {
                   }
                 >{data.isFollowing ? "Отписаться" : "Подписаться"} </Button>)
                 : (<Button onClick={() => onOpen()} endContent={<CiEdit />}>Редактировать</Button>)
+
             }
           </div>
         </Card>
