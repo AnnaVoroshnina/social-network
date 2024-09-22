@@ -60,7 +60,12 @@ export const Card = ({
       likedByUser
         ? await unlikePost(id).unwrap()
         : await likePost({ postId: id }).unwrap()
-      await triggerGetPostBuId(id).unwrap()
+      if (cardFor === 'current-post') {
+        await triggerGetPostBuId(id).unwrap()
+      }
+      if (cardFor === 'post') {
+        await triggerGetAllPost().unwrap()
+      }
     } catch (err) {
       if (hasErrorField(err)) {
         setError(err.data.error)
