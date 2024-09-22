@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { resetUser, selectCurrent } from "../../features/user/userSlice"
 import { useLazyCurrentQuery, useLazyGetUserByIdQuery, useGetUserByIdQuery } from "../../app/services/userApi"
 import { useFollowUserMutation, useUnfollowUserMutation } from "../../app/services/followApi"
-import { useEffect, } from "react"
+import { useEffect } from "react"
 import { GoBack } from "../../components/go-back"
 import { BASE_URL } from "../../constants"
 import { MdOutlinePersonAddAlt1, MdOutlinePersonAddDisabled } from "react-icons/md"
@@ -12,6 +12,7 @@ import { CiEdit } from "react-icons/ci"
 import { ProfileInfo } from "../../components/profile-info"
 import { formatToClientDate } from "../../utils/format-to-client-date"
 import { CountInfo } from "../../components/count-info"
+import { EditProfile } from "../../components/edit-profile"
 
 export const UserProfile = () => {
   const { id } = useParams<{ id: string }>()
@@ -28,6 +29,18 @@ export const UserProfile = () => {
     dispatch(resetUser())
   }, [])
 
+  const handleClose = async () => {
+    try {
+      if (id) {
+        await triggerGetUserById(id)
+        await triggerCurrentQuery()
+        onClose()
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   if (!data) return null
   return (
     <>
@@ -41,10 +54,10 @@ export const UserProfile = () => {
             height={200}
             className="border-4 border-white"
           />
-          <div className="flex flex-col text-2xl font-bold fap-4 items-center">
+          <div className="flex flex-col text-2xl font-bold gap-4 items-center">
             {data.name}
             {
-              currentUser.id !== id
+              currentUser?.id !== id
                 ? (<Button
                   color={data.isFollowing ? "default" : "primary"}
                   variant="flat"
@@ -54,22 +67,23 @@ export const UserProfile = () => {
                       <MdOutlinePersonAddDisabled />
                     ) : (<MdOutlinePersonAddAlt1 />)
                   }
-                >{data.isFollowing ? 'Отписаться' : 'Подписаться'} </Button>)
-                : (<Button endContent={<CiEdit/>}>Редактировать</Button>)
+                >{data.isFollowing ? "Отписаться" : "Подписаться"} </Button>)
+                : (<Button onClick={() => onOpen()} endContent={<CiEdit />}>Редактировать</Button>)
             }
           </div>
         </Card>
         <Card className="flex flex-col space-y-4 p-5 flex-1">
-          <ProfileInfo title='Почта' info={data.email} />
-          <ProfileInfo title='Местоположение' info={data.location} />
-          <ProfileInfo title='Дата рождения' info={formatToClientDate(data.dateOfBirth)} />
-          <ProfileInfo title='Обо мне' info={data.bio} />
+          <ProfileInfo title="Почта" info={data.email} />
+          <ProfileInfo title="Местоположение" info={data.location} />
+          <ProfileInfo title="Дата рождения" info={formatToClientDate(data.dateOfBirth)} />
+          <ProfileInfo title="Обо мне" info={data.bio} />
           <div className="flex gap-2">
-             <CountInfo count={data.followers.length} title='Подписчики'/>
-             <CountInfo count={data.following.length} title='Подписки'/>
+            <CountInfo count={data.followers.length} title="Подписчики" />
+            <CountInfo count={data.following.length} title="Подписки" />
           </div>
         </Card>
       </div>
+      <EditProfile isOpen={isOpen} onClose={handleClose} user={data} />
     </>
   )
 }
