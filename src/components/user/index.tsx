@@ -2,7 +2,7 @@ import { User as NextUiUser } from "@nextui-org/react"
 import { BASE_URL } from "../../constants"
 
 type Props = {
-  name: string
+  name: string | undefined
   avatarUrl: string
   description?: string
   className?: string
