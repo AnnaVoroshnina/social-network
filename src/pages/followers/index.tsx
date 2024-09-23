@@ -10,7 +10,7 @@ export const Followers = () =>{
   if (!currentUser) return null
   return currentUser.followers.length > 0 ?(
     <div className='gap-5 flex flex-col'>
-      {currentUser.followUser.map(user => (
+      {currentUser.followers.map(user => (
         <Link to={`users/${user.follower.id}`} key={user.follower.id}>
           <Card>
             <CardBody className='block'>

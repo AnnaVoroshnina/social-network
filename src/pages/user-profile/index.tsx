@@ -31,7 +31,7 @@ export const UserProfile = () => {
   const handleFollow = async () => {
     try {
       if (id) {
-        data.isFollowing
+        data?.isFollowing
           ? await unfollowUser(id).unwrap()
           : await followUser({ followingId: id }).unwrap()
         await triggerGetUserById(id)
@@ -83,7 +83,6 @@ export const UserProfile = () => {
                   }
                 >{data.isFollowing ? "Отписаться" : "Подписаться"} </Button>)
                 : (<Button onClick={() => onOpen()} endContent={<CiEdit />}>Редактировать</Button>)
-
             }
           </div>
         </Card>
